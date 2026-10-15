@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Community Leaderboard')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-7">
+            <h2 class="fw-bold text-dark mb-1">
+                <i class="bi bi-trophy-fill text-warning me-2"></i> Community Leaderboard
+            </h2>
+            <p class="text-secondary small mb-0">
+                Recognizing citizens leading source segregation across cities, states, and countries.
+            </p>
+        </div>
+        <div class="col-md-5 text-md-end mt-3 mt-md-0">
+            <div class="p-2 px-3 bg-white rounded-pill border d-inline-flex align-items-center gap-2 shadow-sm">
+                <span class="text-muted small">Your Global Rank:</span>
+                <span class="badge bg-success fs-6 rounded-pill" th:text="'#' + ${userRank}">#1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs: City / State / Country / All -->
+    <div class="eco-card p-3 mb-4 bg-white shadow-sm">
+        <!-- Scope Tabs -->
+        <ul class="nav nav-pills nav-fill mb-3" id="filterTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link" th:classappend="${selectedFilterType == 'city'} ? 'active' : ''"
+                        type="button" onclick="setFilterType('city')">
+                    <i class="bi bi-building me-1"></i> City
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" th:classappend="${selectedFilterType == 'state'} ? 'active' : ''"
+                        type="button" onclick="setFilterType('state')">
+                    <i class="bi bi-map me-1"></i> State
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" th:classappend="${selectedFilterType == 'country'} ? 'active' : ''"
+                        type="button" onclick="setFilterType('country')">
+                    <i class="bi bi-globe-americas me-1"></i> Country
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" th:classappend="${selectedFilterType == 'all'} ? 'active' : ''"
+                        type="button" onclick="setFilterType('all')">
+                    <i class="bi bi-globe me-1"></i> Global
+                </button>
+            </li>
+        </ul>
+
+        <!-- Filter Form -->
+        <form th:action="@{/leaderboard}" method="get" id="filterForm" class="row g-2 align-items-center">
+            <input type="hidden" name="filterType" id="filterTypeInput" th:value="${selectedFilterType}"/>
+
+            <!-- City Filter -->
+            <div class="col-md-7" id="cityFilter" th:style="${selectedFilterType != 'city'} ? 'display:none' : ''">
+                <select name="filterValue" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="ALL">All Cities</option>
+                    <option th:each="c : ${availableCities}" th:value="${c}" th:text="${c}"
+                            th:selected="${selectedFilterType == 'city' && selectedFilterValue == c}">City</option>
+                </select>
+            </div>
+
+            <!-- State Filter -->
+            <div class="col-md-7" id="stateFilter" th:style="${selectedFilterType != 'state'} ? 'display:none' : ''">
+                <select name="filterValue" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="ALL">All States</option>
+                    <option th:each="s : ${availableStates}" th:value="${s}" th:text="${s}"
+                            th:selected="${selectedFilterType == 'state' && selectedFilterValue == s}">State</option>
+                </select>
+            </div>
+
+            <!-- Country Filter -->
+            <div class="col-md-7" id="countryFilter" th:style="${selectedFilterType != 'country'} ? 'display:none' : ''">
+                <select name="filterValue" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="ALL">All Countries</option>
+                    <option th:each="co : ${availableCountries}" th:value="${co}" th:text="${co}"
+                            th:selected="${selectedFilterType == 'country' && selectedFilterValue == co}">Country</option>
+                </select>
+            </div>
+
+            <div class="col-md-5 d-flex gap-2" th:if="${selectedFilterType != 'all'}">
+                <a th:href="@{/leaderboard(filterType='all', filterValue='ALL')}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Current Filter Badge -->
+    <div class="mb-3" th:if="${selectedFilterValue != null && selectedFilterValue != 'ALL'}">
+        <span class="badge bg-success-subtle text-success border px-3 py-2">
+            <i class="bi bi-funnel-fill me-1"></i>
+            Showing:
+            <strong th:text="${selectedFilterValue}">Filter</strong>
+            <span class="text-muted ms-1" th:text="'(' + ${selectedFilterType} + ')'">scope</span>
+        </span>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="eco-card p-0 bg-white shadow-sm overflow-hidden mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 70px;" class="text-center">Rank</th>
+                        <th>Citizen Participant</th>
+                        <th>Location</th>
+                        <th>Achievement Tier</th>
+                        <th class="text-end pe-4">Verified EcoPoints</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${leaderboard}"
+                        class="leaderboard-row"
+                        th:classappend="${entry.currentUser} ? 'current-user-row' : ''">
+                        <td class="text-center">
+                            <div class="rank-circle mx-auto"
+                                 th:classappend="${entry.rank == 1} ? 'rank-1' : (${entry.rank == 2} ? 'rank-2' : (${entry.rank == 3} ? 'rank-3' : 'rank-other'))"
+                                 th:text="${entry.rank}">1</div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-dark" th:text="${entry.username}">Username</span>
+                                <span th:if="${entry.currentUser}" class="badge bg-success rounded-pill small">YOU</span>
+                                <span th:if="${entry.demoUser}" class="badge-demo">DEMO DATA</span>
+                            </div>
+                        </td>
+                        <td class="text-secondary small">
+                            <i class="bi bi-geo-alt text-muted me-1"></i>
+                            <span th:text="${entry.locationDisplay != null && entry.locationDisplay != '' ? entry.locationDisplay : entry.ward}">Location</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border small" th:text="${entry.badge}">Tier Badge</span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <span class="fw-bold text-success fs-6" th:text="${entry.points} + ' pts'">0 pts</span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(leaderboard)}">
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                            No users found for this filter. Try a different scope!
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Transparency Notice -->
+    <div class="p-3 bg-light rounded-3 border small text-muted">
+        <i class="bi bi-info-circle text-primary me-1"></i>
+        <strong>Transparency &amp; Demonstration Note:</strong>
+        Sample accounts are explicitly tagged with <span class="badge-demo">DEMO DATA</span>.
+        Real user ranks are determined exclusively by verified, tamper-proof EcoPoints.
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+function setFilterType(type) {
+    const form = document.getElementById('filterForm');
+    const typeInput = document.getElementById('filterTypeInput');
+
+    // Hide all filter dropdowns
+    document.getElementById('cityFilter').style.display = 'none';
+    document.getElementById('stateFilter').style.display = 'none';
+    document.getElementById('countryFilter').style.display = 'none';
+
+    if (type === 'all') {
+        typeInput.value = 'all';
+        // Disable all selects so they don't submit, then submit
+        form.querySelectorAll('select').forEach(s => s.disabled = true);
+        // Add a hidden filterValue=ALL
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'filterValue';
+        hidden.value = 'ALL';
+        form.appendChild(hidden);
+        form.submit();
+    } else {
+        typeInput.value = type;
+        document.getElementById(type + 'Filter').style.display = '';
+        // Enable the correct select, disable others
+        form.querySelectorAll('select').forEach(s => s.disabled = true);
+        const activeSelect = document.querySelector('#' + type + 'Filter select');
+        if (activeSelect) {
+            activeSelect.disabled = false;
+            activeSelect.name = 'filterValue';
+        }
+    }
+
+    // Update active tab styling
+    document.querySelectorAll('#filterTabs .nav-link').forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.nav-link').classList.add('active');
+}
+</script>
+</body>
+</html>

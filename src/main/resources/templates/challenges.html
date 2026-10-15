@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Weekly Challenges')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">
+                <i class="bi bi-flag-fill text-success me-2"></i> Weekly Sustainability Challenges
+            </h2>
+            <p class="text-secondary small mb-0">
+                Complete structured zero-waste goals, earn bonus EcoPoints, and establish lifelong segregation habits.
+            </p>
+        </div>
+        <div>
+            <div class="p-2 px-3 bg-white rounded-pill border shadow-sm small">
+                Completed Goals: <strong class="text-success" th:text="${completedCount}">0</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Streak Alert Banner -->
+    <div class="eco-card p-4 mb-4 bg-white shadow-sm border-start border-4 border-warning">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon amber mb-0">
+                    <i class="bi bi-fire"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold text-dark mb-0">Current Streak: <span class="text-warning" th:text="${currentUser.streakDays} + ' Days'">1 Days</span></h5>
+                    <p class="text-secondary small mb-0">Perform any sustainable action daily. Reach 7 consecutive days to earn +10 Bonus EcoPoints!</p>
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/scan}" class="btn btn-outline-warning btn-sm text-dark fw-bold">
+                    Maintain Today's Streak
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenges Grid -->
+    <div class="row g-4">
+        <div th:each="uc : ${userChallenges}" class="col-md-6">
+            <div class="eco-card h-100 p-4 bg-white shadow-sm d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge rounded-pill px-3 py-1"
+                              th:classappend="${uc.completed} ? 'bg-success' : 'bg-primary-subtle text-primary fw-bold'"
+                              th:text="${uc.completed} ? '✓ COMPLETED' : 'IN PROGRESS'">IN PROGRESS</span>
+
+                        <span class="badge bg-success-subtle text-success fs-6 px-3 py-1 rounded-pill">
+                            +<span th:text="${uc.challenge.pointReward}">25</span> EcoPoints
+                        </span>
+                    </div>
+
+                    <h4 class="fw-bold text-dark mb-2" th:text="${uc.challenge.title}">Challenge Title</h4>
+                    <p class="text-secondary small mb-3" th:text="${uc.challenge.description}">Description text...</p>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Goal Progress</span>
+                            <span class="fw-bold" th:text="${uc.currentProgress} + ' / ' + ${uc.challenge.targetCount}">0 / 5</span>
+                        </div>
+                        <div class="progress" style="height: 10px; border-radius: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 th:style="'width: ' + (${uc.completed} ? 100 : (${uc.currentProgress} * 100 / ${uc.challenge.targetCount})) + '%;'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">
+                        <i class="bi bi-calendar3 me-1"></i> Active until <span th:text="${#temporals.format(uc.challenge.endDate, 'dd MMM')}">End Date</span>
+                    </span>
+
+                    <div th:if="${!uc.completed}">
+                        <a th:if="${uc.challenge.category == 'WASTE_SCAN'}" th:href="@{/scan}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-camera me-1"></i> Scan Items
+                        </a>
+                        <a th:if="${uc.challenge.category == 'QUIZ'}" th:href="@{/quiz}" class="btn btn-sm btn-info text-white">
+                            <i class="bi bi-patch-question me-1"></i> Take Quiz
+                        </a>
+                        <a th:if="${uc.challenge.category == 'RECYCLING'}" th:href="@{/recycling}" class="btn btn-sm btn-success">
+                            <i class="bi bi-recycle me-1"></i> Submit Batch
+                        </a>
+                    </div>
+                    <div th:if="${uc.completed}">
+                        <span class="text-success small fw-bold"><i class="bi bi-check-circle-fill me-1"></i> Reward Claimed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

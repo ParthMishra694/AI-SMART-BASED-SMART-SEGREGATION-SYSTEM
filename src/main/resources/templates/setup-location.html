@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Set Your Location')}"></head>
+
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container my-auto py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="eco-card p-4 p-md-5 shadow-sm">
+                <div class="text-center mb-4">
+                    <div class="stat-icon green mx-auto mb-2" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Set Your Location</h3>
+                    <p class="text-secondary small">
+                        Tell us where you are so we can show nearby eco-warriors and local leaderboards!
+                    </p>
+                </div>
+
+                <form th:action="@{/setup-location}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                    <div class="mb-3">
+                        <label for="country" class="form-label small fw-semibold">Country</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-globe-americas"></i></span>
+                            <input type="text" id="country" name="country" class="form-control"
+                                   placeholder="e.g. India" required
+                                   list="countryList" autocomplete="off">
+                        </div>
+                        <datalist id="countryList">
+                            <option value="India">
+                            <option value="United States">
+                            <option value="United Kingdom">
+                            <option value="Canada">
+                            <option value="Australia">
+                            <option value="Germany">
+                            <option value="France">
+                            <option value="Japan">
+                            <option value="Brazil">
+                            <option value="South Africa">
+                            <option value="Indonesia">
+                            <option value="Nigeria">
+                            <option value="Bangladesh">
+                            <option value="Pakistan">
+                            <option value="Mexico">
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="state" class="form-label small fw-semibold">State / Province</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-map"></i></span>
+                            <input type="text" id="state" name="state" class="form-control"
+                                   placeholder="e.g. Madhya Pradesh" required
+                                   list="stateList" autocomplete="off">
+                        </div>
+                        <datalist id="stateList">
+                            <!-- Indian States -->
+                            <option value="Andhra Pradesh">
+                            <option value="Arunachal Pradesh">
+                            <option value="Assam">
+                            <option value="Bihar">
+                            <option value="Chhattisgarh">
+                            <option value="Delhi">
+                            <option value="Goa">
+                            <option value="Gujarat">
+                            <option value="Haryana">
+                            <option value="Himachal Pradesh">
+                            <option value="Jharkhand">
+                            <option value="Karnataka">
+                            <option value="Kerala">
+                            <option value="Madhya Pradesh">
+                            <option value="Maharashtra">
+                            <option value="Manipur">
+                            <option value="Meghalaya">
+                            <option value="Mizoram">
+                            <option value="Nagaland">
+                            <option value="Odisha">
+                            <option value="Punjab">
+                            <option value="Rajasthan">
+                            <option value="Sikkim">
+                            <option value="Tamil Nadu">
+                            <option value="Telangana">
+                            <option value="Tripura">
+                            <option value="Uttar Pradesh">
+                            <option value="Uttarakhand">
+                            <option value="West Bengal">
+                        </datalist>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="city" class="form-label small fw-semibold">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+                            <input type="text" id="city" name="city" class="form-control"
+                                   placeholder="e.g. Bhopal" required
+                                   list="cityList" autocomplete="off">
+                        </div>
+                        <datalist id="cityList">
+                            <option value="Mumbai">
+                            <option value="Delhi">
+                            <option value="Bangalore">
+                            <option value="Hyderabad">
+                            <option value="Chennai">
+                            <option value="Kolkata">
+                            <option value="Pune">
+                            <option value="Ahmedabad">
+                            <option value="Jaipur">
+                            <option value="Lucknow">
+                            <option value="Bhopal">
+                            <option value="Indore">
+                            <option value="Surat">
+                            <option value="Nagpur">
+                            <option value="Patna">
+                            <option value="Chandigarh">
+                            <option value="Kochi">
+                            <option value="Coimbatore">
+                            <option value="Guwahati">
+                            <option value="Bhubaneswar">
+                        </datalist>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                        <i class="bi bi-check-circle me-1"></i> Set My Location & Continue
+                    </button>
+                </form>
+
+                <div class="text-center small text-muted mt-2">
+                    <i class="bi bi-shield-check text-success me-1"></i>
+                    Your location is used only for community leaderboards — we never share your exact address.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

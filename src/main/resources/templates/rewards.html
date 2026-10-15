@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Green Rewards & Municipal Partnerships')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning px-3 py-1 rounded-pill fw-bold mb-2">
+                    <i class="bi bi-clock-history me-1"></i> Future Roadmap & Transparency
+                </span>
+                <h2 class="fw-bold text-dark">Proposed Green Rewards Program</h2>
+                <p class="text-secondary small">
+                    How EcoSort AI is structured to bridge citizen segregation with future municipal incentives and local green businesses.
+                </p>
+            </div>
+
+            <!-- Crucial Academic & Legal Disclosure Banner -->
+            <div class="alert alert-info border-info p-4 mb-4 rounded-4 shadow-sm">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-shield-exclamation fs-2 text-primary"></i>
+                    <div>
+                        <h5 class="fw-bold text-dark mb-1">Academic Project Disclosure & Transparency Policy</h5>
+                        <p class="small text-secondary mb-2">
+                            EcoSort AI is currently implemented as an internship prototype aligned with <strong>UN Sustainable Development Goal 12</strong>.
+                            Current <strong>EcoPoints are purely virtual gamification tokens</strong> and carry no monetary cash redemption value at this stage.
+                        </p>
+                        <ul class="small text-secondary mb-0 ps-3">
+                            <li>No municipal partnership or Nagar Palika agreement has been executed yet. Any future program will be announced after independent civic agreements are finalized.</li>
+                            <li>EcoSort AI does not promise monetary compensation, cash payouts, or guaranteed merchant vouchers.</li>
+                            <li>We strictly refrain from creating fake partner logos, fabricated coupon codes, or simulated redemption transactions.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conceptual Architecture for Future Rewards -->
+            <h4 class="fw-bold text-dark mb-3">Proposed Phase 2 Partnership Architecture</h4>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="eco-card p-4 h-100 bg-white shadow-sm">
+                        <div class="stat-icon green mb-3">
+                            <i class="bi bi-shop"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark">1. Local Eco-Vendors (Proposed)</h6>
+                        <p class="text-secondary small mb-0">
+                            Partnering with local bulk-grocers, farmers' markets, and zero-plastic cafes to offer small percentage discounts in exchange for verified EcoPoint milestones.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="eco-card p-4 h-100 bg-white shadow-sm">
+                        <div class="stat-icon blue mb-3">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark">2. Civic Recognition (Proposed)</h6>
+                        <p class="text-secondary small mb-0">
+                            Issuing ward-level certificates of environmental stewardship and honoring top community households during municipal cleanliness drives (Swachhata campaigns).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="eco-card p-4 h-100 bg-white shadow-sm">
+                        <div class="stat-icon amber mb-3">
+                            <i class="bi bi-tree"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark">3. Community Green Projects (Proposed)</h6>
+                        <p class="text-secondary small mb-0">
+                            Pooling community EcoPoints toward neighborhood urban tree planting, public composting units, and school environmental education drives.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Extensibility Note -->
+            <div class="eco-card p-4 bg-white shadow-sm mb-4">
+                <h5 class="fw-bold text-dark mb-2">Technical Extensibility for Evaluators</h5>
+                <p class="text-secondary small mb-3">
+                    The backend database schema incorporates an immutable <code>RewardTransaction</code> ledger with strict idempotency keys.
+                    When civic or commercial partnerships are established, a partner redemption service can plug directly into the existing ledger without refactoring core business logic.
+                </p>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                    <span class="text-muted small">Current System Status: Virtual MVP Ledger Active</span>
+                    <a th:href="@{/ecopoints}" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-coin me-1"></i> View My EcoPoints Ledger
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

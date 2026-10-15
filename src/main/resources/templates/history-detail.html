@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Analysis Detail')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" class="text-decoration-none text-muted">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/history}" class="text-decoration-none text-muted">History</a></li>
+                    <li class="breadcrumb-item active text-success" aria-current="page" th:text="${analysis.itemName}">Item Name</li>
+                </ol>
+            </nav>
+
+            <div class="eco-card p-4 p-md-5 bg-white shadow-sm mb-4">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-4">
+                    <div>
+                        <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-bold mb-2">
+                            Analysis Record #<span th:text="${analysis.id}">1</span>
+                        </span>
+                        <h2 class="fw-bold text-dark mb-1" th:text="${analysis.itemName}">Item Name</h2>
+                        <span class="text-muted small">
+                            Recorded on <span th:text="${#temporals.format(analysis.createdAt, 'dd MMMM yyyy, HH:mm')}">Date</span>
+                        </span>
+                    </div>
+
+                    <span class="badge-demo" th:if="${analysis.demoFallbackUsed}">Demo Mode</span>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4 text-center" th:if="${analysis.imagePath != null}">
+                        <div class="p-2 border rounded-4 bg-light">
+                            <img th:src="@{${analysis.imagePath}}" alt="Waste Photo" class="img-fluid rounded-3" style="max-height: 220px; object-fit: cover;">
+                        </div>
+                    </div>
+
+                    <div th:class="${analysis.imagePath != null} ? 'col-md-8' : 'col-12'">
+                        <div class="category-banner"
+                             th:classappend="${#strings.containsIgnoreCase(analysis.predictedCategory, 'plastic')} ? 'plastic' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'organic')} ? 'organic' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'paper')} ? 'paper' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'metal')} ? 'metal' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'battery')} ? 'battery' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'glass')} ? 'glass' : 'general')))))">
+                            <div>
+                                <div class="small fw-bold text-uppercase">Waste Stream</div>
+                                <h4 class="fw-bold mb-0" th:text="${analysis.predictedCategory}">Category</h4>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <span class="badge bg-white text-dark border rounded-pill px-3 py-1 small">
+                                    Confidence: <strong th:text="${analysis.confidenceLevel}">High</strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-dark mb-1">AI Explanation</h6>
+                        <p class="text-secondary small mb-3" th:text="${analysis.aiExplanation}">Explanation</p>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <div class="fw-bold text-success small mb-2"><i class="bi bi-trash3-fill me-1"></i> Disposal Advice</div>
+                            <p class="text-secondary small mb-0" th:text="${analysis.disposalRecommendation}">Recommendation</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <div class="fw-bold text-primary small mb-2"><i class="bi bi-arrow-repeat me-1"></i> Reuse & 4R Tips</div>
+                            <p class="text-secondary small mb-0" th:text="${analysis.reuseRecycleTips}">Tips</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-danger-subtle rounded-3 border border-danger-subtle h-100">
+                            <div class="fw-bold text-danger small mb-2"><i class="bi bi-shield-exclamation me-1"></i> Safety Precautions</div>
+                            <p class="text-danger-emphasis small mb-0" th:text="${analysis.safetyPrecautions}">Safety</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between pt-3 border-top">
+                    <a th:href="@{/history}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Back to History
+                    </a>
+                    <a th:href="@{/scan}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-camera me-1"></i> New Scan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

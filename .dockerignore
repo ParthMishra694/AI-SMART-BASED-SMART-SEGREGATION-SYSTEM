@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+.tools
+data
+uploads
+target
+application-local.properties
+.env
+*.log
+README.md

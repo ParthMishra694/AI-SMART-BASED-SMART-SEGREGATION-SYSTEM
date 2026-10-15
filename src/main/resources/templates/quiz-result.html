@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Quiz Results')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Results Banner -->
+            <div class="eco-card p-4 p-md-5 text-center mb-4 shadow-sm"
+                 th:classappend="${attempt.passed} ? 'bg-success-subtle border-success' : 'bg-warning-subtle border-warning'">
+                <div class="stat-icon mx-auto mb-2"
+                     th:classappend="${attempt.passed} ? 'green' : 'amber'">
+                    <i th:class="${attempt.passed} ? 'bi bi-patch-check-fill' : 'bi bi-arrow-repeat'"></i>
+                </div>
+
+                <h2 class="fw-bold text-dark mb-1" th:text="${attempt.passed} ? 'Congratulations! Quiz Passed' : 'Keep Learning!'">Result</h2>
+                <p class="text-secondary small mb-3">
+                    You scored <strong class="fs-5 text-dark" th:text="${attempt.score} + '/' + ${attempt.totalQuestions}">5/5</strong>
+                </p>
+
+                <div th:if="${attempt.passed}">
+                    <span class="badge bg-success fs-6 px-4 py-2 rounded-pill mb-2">
+                        <i class="bi bi-coin text-warning me-1"></i> +<span th:text="${attempt.pointsAwarded}">5</span> EcoPoints Awarded
+                    </span>
+                    <p class="small text-success mb-0 fw-semibold">Challenge "SDG 12 Knowledge Master" updated!</p>
+                </div>
+
+                <div th:unless="${attempt.passed}">
+                    <p class="small text-muted mb-3">You need at least 4 out of 5 correct to pass. Review the explanations below and try again!</p>
+                    <a th:href="@{/quiz}" class="btn btn-warning btn-sm fw-bold">Retake Quiz</a>
+                </div>
+            </div>
+
+            <!-- Explanations breakdown -->
+            <h4 class="fw-bold text-dark mb-3">Answer Explanations & UN SDG 12 Notes</h4>
+
+            <div class="d-flex flex-column gap-3 mb-4">
+                <div th:each="q, iter : ${questions}" class="eco-card p-4 bg-white shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge bg-light text-dark border small fw-bold" th:text="'Question ' + ${iter.count}">Q1</span>
+                        <span th:if="${userAnswers.get(q.id) == q.correctOptionIndex}" class="badge bg-success small">✓ Correct</span>
+                        <span th:unless="${userAnswers.get(q.id) == q.correctOptionIndex}" class="badge bg-danger small">✗ Incorrect</span>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2" th:text="${q.question}">Question title</h6>
+
+                    <div class="p-2 px-3 bg-light rounded-3 small mb-2">
+                        <span class="text-muted">Correct Answer:</span>
+                        <strong class="text-success" th:text="${q.options.get(q.correctOptionIndex)}">Correct choice</strong>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 border-start border-4 border-info small text-secondary">
+                        <strong class="text-dark"><i class="bi bi-info-circle text-info me-1"></i> Sustainability Fact:</strong>
+                        <span th:text="${q.explanation}">Explanation note</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/dashboard}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                <a th:href="@{/challenges}" class="btn btn-primary">
+                    View Weekly Challenges <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

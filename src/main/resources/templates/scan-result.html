@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Waste Analysis Result')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}" class="text-decoration-none text-muted">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/scan}" class="text-decoration-none text-muted">Scanner</a></li>
+                    <li class="breadcrumb-item active text-success" aria-current="page">Analysis Result</li>
+                </ol>
+            </nav>
+
+            <!-- Demo Mode Warning Banner (if fallback used) -->
+            <div th:if="${analysis.demoFallbackUsed}" class="alert alert-warning border-warning d-flex align-items-center gap-3 p-3 mb-4 rounded-3 small">
+                <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+                <div>
+                    <strong>DEMO MODE NOTICE:</strong>
+                    This classification was generated via the offline deterministic fallback engine because an external Gemini API key was not configured.
+                    In accordance with ethical academic disclosure, this result did not originate from a live external cloud AI model.
+                </div>
+            </div>
+
+            <!-- Main Result Card -->
+            <div class="eco-card p-4 p-md-5 mb-4 shadow-sm bg-white">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                    <div>
+                        <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 fw-bold mb-2">
+                            <i class="bi bi-shield-check me-1"></i> Analysis #<span th:text="${analysis.id}">1</span>
+                        </span>
+                        <h2 class="fw-bold text-dark mb-1" th:text="${analysis.itemName}">Identified Item Name</h2>
+                        <span class="text-muted small">
+                            Recorded on <span th:text="${#temporals.format(analysis.createdAt, 'dd MMM yyyy, HH:mm')}">Date</span>
+                        </span>
+                    </div>
+
+                    <div class="text-md-end">
+                        <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">
+                            <i class="bi bi-coin text-warning me-1"></i> +2 EcoPoints Awarded
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row g-4 align-items-start mb-4">
+                    <!-- Photo Thumbnail -->
+                    <div class="col-md-4 text-center">
+                        <div class="p-2 border rounded-4 bg-light">
+                            <img th:if="${analysis.imagePath != null}" th:src="@{${analysis.imagePath}}" alt="Waste Photo" class="img-fluid rounded-3" style="max-height: 220px; object-fit: cover;">
+                            <div th:unless="${analysis.imagePath != null}" class="py-5 text-muted">
+                                <i class="bi bi-image fs-1 d-block mb-1"></i>
+                                Photo reference preserved
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Badges & AI Explanation -->
+                    <div class="col-md-8">
+                        <!-- Category Banner -->
+                        <div class="category-banner"
+                             th:classappend="${#strings.containsIgnoreCase(analysis.predictedCategory, 'plastic')} ? 'plastic' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'organic')} ? 'organic' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'paper')} ? 'paper' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'metal')} ? 'metal' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'battery')} ? 'battery' :
+                                            (${#strings.containsIgnoreCase(analysis.predictedCategory, 'glass')} ? 'glass' : 'general')))))">
+                            <div>
+                                <div class="small fw-bold text-uppercase">Assigned Category</div>
+                                <h4 class="fw-bold mb-0" th:text="${analysis.predictedCategory}">Category</h4>
+                            </div>
+                            <div class="ms-auto text-end">
+                                <span class="badge bg-white text-dark border rounded-pill px-3 py-1 small">
+                                    Confidence: <strong th:text="${analysis.confidenceLevel}">High</strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- AI Material Explanation -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold text-dark mb-1">Material Composition & Classification</h6>
+                            <p class="text-secondary small mb-0" th:text="${analysis.aiExplanation}">
+                                AI material explanation...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Action Panels -->
+                <div class="row g-3 mb-4">
+                    <!-- Disposal Recommendation -->
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <div class="fw-bold text-success small mb-2 d-flex align-items-center gap-1">
+                                <i class="bi bi-trash3-fill"></i> Disposal Instructions
+                            </div>
+                            <p class="text-secondary small mb-0" th:text="${analysis.disposalRecommendation}">
+                                Disposal guidance...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Reuse & Recycling Possibilities -->
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <div class="fw-bold text-primary small mb-2 d-flex align-items-center gap-1">
+                                <i class="bi bi-arrow-repeat"></i> Reuse & 4R Potential
+                            </div>
+                            <p class="text-secondary small mb-0" th:text="${analysis.reuseRecycleTips}">
+                                Reuse tips...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Safety Precautions -->
+                    <div class="col-md-4">
+                        <div class="p-3 bg-danger-subtle rounded-3 border border-danger-subtle h-100">
+                            <div class="fw-bold text-danger small mb-2 d-flex align-items-center gap-1">
+                                <i class="bi bi-exclamation-octagon-fill"></i> Safety Precautions
+                            </div>
+                            <p class="text-danger-emphasis small mb-0" th:text="${analysis.safetyPrecautions}">
+                                Safety precautions...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explainable Agent Execution Trace (Collapsible Accordion) -->
+                <div class="accordion mb-4" id="traceAccordion">
+                    <div class="accordion-item border rounded-3 overflow-hidden">
+                        <h2 class="accordion-header" id="headingTrace">
+                            <button class="accordion-button collapsed bg-light py-2 small fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrace">
+                                <i class="bi bi-terminal me-2 text-primary"></i> Inspect Explainable AI Agent Tool Execution Trace
+                            </button>
+                        </h2>
+                        <div id="collapseTrace" class="accordion-collapse collapse" data-bs-parent="#traceAccordion">
+                            <div class="accordion-body p-3 bg-dark">
+                                <pre class="agent-trace-box mb-0"><code th:text="${analysis.agentExecutionTrace}">Execution trace JSON</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap gap-2 justify-content-between pt-3 border-top">
+                    <a th:href="@{/history}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Back to History
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/scan}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-camera me-1"></i> Scan Another Item
+                        </a>
+                        <a th:href="@{/dashboard}" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-speedometer2 me-1"></i> Citizen Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('SDG 12 Waste Segregation Quiz')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <span class="sdg-badge mb-2"><i class="bi bi-globe-americas"></i> UN SDG 12 Mastery</span>
+                <h2 class="fw-bold text-dark">Waste Segregation & Sustainability Quiz</h2>
+                <p class="text-secondary small">
+                    Score 80%+ (at least 4 out of 5) to earn <strong>+5 EcoPoints</strong> and complete your SDG knowledge badge!
+                </p>
+            </div>
+
+            <form th:action="@{/quiz/submit}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <div class="d-flex flex-column gap-4 mb-4">
+                    <div th:each="q, iter : ${questions}" class="eco-card p-4 bg-white shadow-sm">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-success-subtle text-success rounded-pill fw-bold" th:text="'Question ' + ${iter.count}">Q1</span>
+                            <span class="text-muted small">&bull; 1 Point</span>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-3" th:text="${q.question}">Question text?</h5>
+
+                        <div class="d-flex flex-column gap-2">
+                            <div th:each="opt, optIter : ${q.options}" class="form-check p-2 px-3 bg-light rounded-3 border">
+                                <input class="form-check-input" type="radio"
+                                       th:name="'q_' + ${q.id}"
+                                       th:id="'q_' + ${q.id} + '_opt_' + ${optIter.index}"
+                                       th:value="${optIter.index}" required>
+                                <label class="form-check-label w-100 cursor-pointer small fw-semibold text-secondary"
+                                       th:for="'q_' + ${q.id} + '_opt_' + ${optIter.index}"
+                                       th:text="${opt}">Option label</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="eco-card p-4 bg-white text-center shadow-sm">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-send-check me-2"></i> Submit Quiz for Grading
+                    </button>
+                    <div class="text-muted small mt-2">Server-side deterministic validation guarantees zero duplicate credit.</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

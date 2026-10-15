@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Municipal Admin Dashboard')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">
+                <i class="bi bi-shield-lock-fill text-danger me-2"></i> Municipal Administrator Console
+            </h2>
+            <p class="text-secondary small mb-0">
+                Moderation queue, recycling submission verification, challenge oversight, and system-wide ledger audit.
+            </p>
+        </div>
+        <div>
+            <span class="badge bg-danger px-3 py-2 rounded-pill">
+                <i class="bi bi-person-badge me-1"></i> Logged in as Administrator
+            </span>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show small" role="alert">
+        <i class="bi bi-check-circle-fill me-1"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show small" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Overview Counters -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-widget">
+                <div class="stat-icon green"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-value" th:text="${totalUsers}">0</div>
+                <div class="stat-label">Registered Citizens</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-widget">
+                <div class="stat-icon blue"><i class="bi bi-camera-fill"></i></div>
+                <div class="stat-value" th:text="${totalAnalyses}">0</div>
+                <div class="stat-label">Total Waste Analyses Logged</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-widget">
+                <div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div>
+                <div class="stat-value" th:text="${pendingCount}">0</div>
+                <div class="stat-label">Pending Recycling Submissions</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Pending Submissions Queue -->
+    <div class="eco-card p-4 bg-white shadow-sm mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">
+                <i class="bi bi-inbox-fill text-warning me-2"></i> Pending Recycling Verification Queue
+            </h5>
+            <span class="badge bg-warning text-dark" th:text="${pendingCount} + ' awaiting review'">0</span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(pendingSubmissions)}" class="p-4 text-center text-muted">
+            <i class="bi bi-check2-all text-success fs-2 d-block mb-1"></i>
+            No pending submissions waiting for review. The queue is clear!
+        </div>
+
+        <div th:unless="${#lists.isEmpty(pendingSubmissions)}" class="d-flex flex-column gap-3">
+            <div th:each="sub : ${pendingSubmissions}" class="p-4 rounded-4 bg-light border">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-1" th:text="${sub.title}">Submission Title</h5>
+                        <div class="small text-muted">
+                            Submitted by: <strong class="text-dark" th:text="${sub.user.username}">Citizen</strong> &bull;
+                            Ward: <span th:text="${sub.user.ward}">Ward 12</span> &bull;
+                            Timestamp: <span th:text="${#temporals.format(sub.createdAt, 'dd MMM yyyy, HH:mm')}">Date</span>
+                        </div>
+                    </div>
+                    <span class="badge bg-primary rounded-pill px-3 py-1" th:text="${sub.materialType} + ' (' + ${sub.estimatedWeightKg} + ' kg)'">Material</span>
+                </div>
+
+                <p class="text-secondary small mb-3" th:text="${sub.description}">Description text...</p>
+
+                <!-- Approval / Rejection Action Form -->
+                <div class="row g-2 align-items-center pt-3 border-top">
+                    <div class="col-md-7">
+                        <form th:id="'approveForm_' + ${sub.id}" th:action="@{/admin/submissions/{id}/approve(id=${sub.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <input type="text" name="notes" class="form-control form-control-sm" placeholder="Reviewer notes (e.g. Verified 5kg dry cardboard drop-off)..." value="Verified and approved for municipal recycling credit.">
+                        </form>
+                    </div>
+                    <div class="col-md-5 d-flex gap-2">
+                        <button type="submit" th:form="'approveForm_' + ${sub.id}" class="btn btn-sm btn-success flex-grow-1">
+                            <i class="bi bi-check-lg me-1"></i> Approve (+15 pts)
+                        </button>
+
+                        <form th:action="@{/admin/submissions/{id}/reject(id=${sub.id})}" method="post" onsubmit="return confirm('Reject this submission?');">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <input type="hidden" name="notes" value="Insufficient proof of authorized recycling drop-off.">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x-lg me-1"></i> Reject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Ledger Audit View -->
+    <div class="eco-card p-4 bg-white shadow-sm mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">
+                <i class="bi bi-journal-text text-primary me-2"></i> System-Wide Reward Ledger Audit
+            </h5>
+            <span class="text-muted small">Global Audit Trail</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle small mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Reason</th>
+                        <th>Activity Reference</th>
+                        <th class="text-end">Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tx : ${allTransactions}">
+                        <td class="text-muted" th:text="${#temporals.format(tx.createdAt, 'dd MMM, HH:mm')}">Time</td>
+                        <td><strong th:text="${tx.user.username}">Username</strong></td>
+                        <td><span class="badge bg-light text-dark border" th:text="${tx.transactionType}">Type</span></td>
+                        <td th:text="${tx.reason}">Reason</td>
+                        <td><code class="text-muted" th:text="${tx.activityReference}">ref</code></td>
+                        <td class="text-end fw-bold text-success" th:text="'+' + ${tx.points}">+2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

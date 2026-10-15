@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('Turn Everyday Waste into Everyday Impact')}"></head>
+
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<!-- Hero Section -->
+<section class="py-5" style="background: radial-gradient(ellipse at 82% 18%, rgba(93, 224, 190, .28), transparent 34%), linear-gradient(135deg, #f3fbf7 0%, #ffffff 58%, #eaf8f2 100%);">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1 bg-white rounded-pill border shadow-sm">
+                    <span class="sdg-badge"><i class="bi bi-globe-americas"></i> UN SDG 12</span>
+                    <span class="fw-semibold text-success small">Responsible Consumption & Production</span>
+                </div>
+
+                <h1 class="display-4 fw-extrabold text-dark mb-3">
+                    Know your waste. <span class="text-success">Sort it smarter.</span>
+                </h1>
+
+                <p class="lead text-secondary mb-4">
+                    Snap a photo to identify materials, find the right disposal stream, and see the small actions that add up to a cleaner neighborhood.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a th:href="@{/scan}" class="btn btn-primary btn-lg d-flex align-items-center gap-2">
+                        <i class="bi bi-camera-fill"></i> Start AI Waste Scan
+                    </a>
+                    <a th:href="@{/register}" class="btn btn-outline-primary btn-lg" sec:authorize="isAnonymous()">
+                        Join Free &bull; Earn Points
+                    </a>
+                    <a th:href="@{/dashboard}" class="btn btn-outline-primary btn-lg" sec:authorize="isAuthenticated()">
+                        Open My Dashboard
+                    </a>
+                </div>
+
+                <div class="row g-3 pt-3 border-top text-secondary small">
+                    <div class="col-sm-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <span>Zero Guesswork Segregation</span>
+                    </div>
+                    <div class="col-sm-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <span>Explainable AI Reasoning</span>
+                    </div>
+                    <div class="col-sm-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <span>Zero-Cheat Ledger</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="eco-card p-4 shadow-lg border-0 bg-white">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-2 rounded-pill">
+                            <i class="bi bi-cpu me-1"></i> Live Perception Demo
+                        </span>
+                        <span class="badge-demo">Sample Preview</span>
+                    </div>
+
+                    <div class="text-center p-4 bg-light rounded-4 mb-3 border">
+                        <div class="upload-icon-circle">
+                            <i class="bi bi-recycle"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1">PET Plastic Beverage Bottle</h5>
+                        <span class="badge bg-info text-white rounded-pill px-3 py-1">Recyclable plastic</span>
+                        <p class="text-muted small mt-2 mb-0">
+                            Confidence: <strong class="text-success">98.4%</strong> &bull; Bin: <strong class="text-primary">Blue Dry Recyclables</strong>
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-success-subtle rounded-3 mb-3 small">
+                        <div class="d-flex align-items-center gap-2 text-success fw-bold mb-1">
+                            <i class="bi bi-shield-check"></i> Municipal Guideline
+                        </div>
+                        Empty liquid, rinse clean, flatten bottle, and replace cap to save volume.
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-2 px-3 bg-light rounded-pill border">
+                        <span class="small text-muted">Reward Eligibility:</span>
+                        <span class="badge bg-success rounded-pill px-3 py-1">+2 EcoPoints</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-success fw-bold text-uppercase small">Agentic Pipeline</span>
+            <h2 class="fw-bold text-dark">From photo to better sorting</h2>
+            <p class="text-secondary">From camera snapshot to verified community impact in four transparent steps.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-widget h-100 text-center">
+                    <div class="stat-icon green mx-auto">
+                        <i class="bi bi-camera"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Capture Item</h5>
+                    <p class="text-secondary small mb-0">Take a quick smartphone photo or upload an image of packaging, food waste, or e-waste.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-widget h-100 text-center">
+                    <div class="stat-icon blue mx-auto">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Vision Analysis</h5>
+                    <p class="text-secondary small mb-0">Gemini Vision detects material types, assess safety precautions, and flags any visual uncertainties.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-widget h-100 text-center">
+                    <div class="stat-icon amber mx-auto">
+                        <i class="bi bi-trash3"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Segregate & Act</h5>
+                    <p class="text-secondary small mb-0">Receive exact bin color advice (Green, Blue, Red/Hazardous) and practical preparation tips.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-widget h-100 text-center">
+                    <div class="stat-icon purple mx-auto">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <h5 class="fw-bold">4. Earn EcoPoints</h5>
+                    <p class="text-secondary small mb-0">Earn tamper-proof EcoPoints recorded on an immutable ledger and climb your local ward leaderboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- UN SDG 12 Alignment Section -->
+<section class="py-5" style="background-color: #f1f5f9;">
+    <div class="container py-3">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <div class="p-4 bg-white rounded-4 border shadow-sm">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="p-3 rounded-3" style="background-color: #cf8d2a; color: white;">
+                            <i class="bi bi-globe-americas fs-2"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">UN SDG 12 Commitment</h4>
+                            <span class="text-muted small">Responsible Consumption and Production</span>
+                        </div>
+                    </div>
+                    <p class="text-secondary small mb-3">
+                        Sustainable Development Goal 12 aims to ensure sustainable consumption and production patterns.
+                        Municipal solid waste is growing at unprecedented rates; source segregation is the single most effective intervention
+                        preventing recyclable materials from degrading in anaerobic landfills.
+                    </p>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check2-circle text-success fs-5"></i>
+                            <div><strong>Target 12.3:</strong> Reduce per-capita household food waste through organic segregation and composting guidance.</div>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check2-circle text-success fs-5"></i>
+                            <div><strong>Target 12.5:</strong> Substantially reduce waste generation through prevention, reduction, recycling, and reuse (the 4 Rs).</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="p-4 bg-white rounded-4 border shadow-sm">
+                    <h5 class="fw-bold text-dark mb-2">Supported Waste Categories</h5>
+                    <p class="text-muted small mb-3">Trained to recognize 10 distinct municipal waste and recyclable streams:</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">Organic / wet waste</span>
+                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2 rounded-pill">Recyclable plastic</span>
+                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill">Paper and cardboard</span>
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-3 py-2 rounded-pill">Glass</span>
+                        <span class="badge bg-dark-subtle text-dark-emphasis border border-dark-subtle px-3 py-2 rounded-pill">Metal</span>
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">Batteries</span>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">Electronic waste</span>
+                        <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-2 rounded-pill">Potentially hazardous waste</span>
+                        <span class="badge bg-light text-muted border px-3 py-2 rounded-pill">General / non-recyclable</span>
+                        <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill">Unknown / needs clarification</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5 bg-dark text-white text-center">
+    <div class="container py-3">
+        <h2 class="fw-bold mb-3">Ready to Make Your Community Greener?</h2>
+        <p class="lead text-light-50 mb-4 mx-auto" style="max-width: 600px;">
+            Join your neighbors, test your sustainability knowledge, and earn points while helping clean up your ward.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a th:href="@{/scan}" class="btn btn-success btn-lg px-4">
+                <i class="bi bi-camera me-1"></i> Scan Waste Item
+            </a>
+            <a th:href="@{/quiz}" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-patch-question me-1"></i> Take SDG Quiz (+5 pts)
+            </a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
